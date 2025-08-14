@@ -40,9 +40,10 @@
     "lint:fix": "eslint . --fix",
     "test": "jest"
   },
-  "devDependencies": {
+  "dependencies": {
     "rimraf": "6.0.1"
   },
+  "devDependencies": {},
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   }

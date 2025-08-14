@@ -60,13 +60,12 @@
     "@medplum/fhirtypes": "4.3.9",
     "dataloader": "2.2.3",
     "graphql": "16.11.0",
-    "rfc6902": "5.1.2"
-  },
-  "devDependencies": {
+    "rfc6902": "5.1.2",
     "@microsoft/api-extractor": "7.52.10",
     "esbuild": "0.25.8",
     "rimraf": "6.0.1"
   },
+  "devDependencies": {},
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   }

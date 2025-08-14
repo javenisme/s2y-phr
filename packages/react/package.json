@@ -68,6 +68,11 @@
     "storybook": "storybook build",
     "test": "jest"
   },
+  "dependencies": {
+    "@microsoft/api-extractor": "7.52.10",
+    "esbuild": "0.25.8",
+    "rimraf": "6.0.1"
+  },
   "devDependencies": {
     "@mantine/core": "7.17.8",
     "@mantine/hooks": "7.17.8",
@@ -77,9 +82,6 @@
     "@medplum/fhirtypes": "4.3.9",
     "@medplum/mock": "4.3.9",
     "@medplum/react-hooks": "4.3.9",
-    "@microsoft/api-extractor": "7.52.10",
-    "esbuild": "0.25.8",
-    "rimraf": "6.0.1",
     "@storybook/addon-actions": "8.6.14",
     "@storybook/addon-essentials": "8.6.14",
     "@storybook/addon-links": "8.6.14",
