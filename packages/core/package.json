@@ -50,7 +50,7 @@
   "scripts": {
     "api-documenter": "api-documenter markdown --input-folder ./dist/api/ --output-folder ./dist/docs/",
     "api-extractor": "api-extractor run --local && cp dist/types.d.ts dist/cjs/index.d.ts && cp dist/types.d.ts dist/esm/index.d.ts",
-    "build": "npm run clean && npx --package=typescript tsc && node esbuild.mjs && npm run api-extractor && npm run api-documenter",
+    "build": "npm run clean && npx --package=typescript tsc --project tsconfig.build.json && node esbuild.mjs && npm run api-extractor && npm run api-documenter",
     "clean": "npx rimraf dist",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -59,7 +59,6 @@
   "devDependencies": {
     "@medplum/definitions": "4.3.9",
     "@medplum/fhirtypes": "4.3.9",
-    "@types/jest": "29.5.14",
     "jest-websocket-mock": "2.5.0",
     "vite": "7.0.6"
   },
