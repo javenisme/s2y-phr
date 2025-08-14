@@ -47,11 +47,13 @@
     "dist"
   ],
   "scripts": {
-    "api-documenter": "api-documenter markdown --input-folder ./dist/api/ --output-folder ./dist/docs/",
     "api-extractor": "api-extractor run --local --config api-extractor.simple.json",
-    "build": "npm run clean && node build.mjs && npm run api-extractor && npm run api-documenter",
+    "api-documenter": "npx --package=@microsoft/api-documenter api-documenter markdown --input-folder ./dist/api/ --output-folder ./dist/docs/",
+    "api-extractor": "npx --package=@microsoft/api-extractor api-extractor run --local --config api-extractor.simple.json",
+    "build": "npm run clean && node build.mjs",
+    "build:full": "npm run clean && node build.mjs && npm run api-extractor && npm run api-documenter",
     "build:esbuild": "npm run clean && npx --package=typescript tsc --project tsconfig.build.json && node esbuild.mjs && npm run api-extractor && npm run api-documenter",
-    "clean": "npx rimraf dist",
+    "clean": "npx --package=rimraf rimraf dist",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "jest"
@@ -59,10 +61,7 @@
   "devDependencies": {
     "@medplum/definitions": "4.3.9",
     "@medplum/fhirtypes": "4.3.9",
-    "@microsoft/api-documenter": "7.26.31",
-    "@microsoft/api-extractor": "7.52.10",
-    "jest-websocket-mock": "2.5.0",
-    "rimraf": "6.0.1"
+    "jest-websocket-mock": "2.5.0"
   },
   "peerDependencies": {
     "pdfmake": "^0.2.5"
