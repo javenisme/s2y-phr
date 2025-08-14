@@ -35,7 +35,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "npx tsc",
+    "build": "npx --package=typescript tsc",
     "clean": "",
     "test": ""
   },
