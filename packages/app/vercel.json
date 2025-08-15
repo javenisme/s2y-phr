@@ -1,7 +1,7 @@
 {
   "version": 2,
   "name": "medplum-frontend",
-  "buildCommand": "cd ../.. && npm ci && npm run build:app",
+  "buildCommand": "npm run build:ci",
   "outputDirectory": "dist",
   "framework": null,
   "rewrites": [

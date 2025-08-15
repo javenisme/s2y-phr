@@ -20,6 +20,7 @@
   ],
   "scripts": {
     "build": "npm run clean && npx --package=typescript tsc && vite build",
+    "build:ci": "npm run clean && vite build",
     "clean": "npx rimraf dist",
     "dev": "vite",
     "lint": "eslint .",
@@ -59,6 +60,6 @@
     "rfc6902": "5.1.2"
   },
   "engines": {
-    "node": "^20.19.0 || >=22.12.0"
+    "node": "20.x"
   }
 }

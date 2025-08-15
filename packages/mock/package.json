@@ -48,7 +48,7 @@
   ],
   "scripts": {
     "api-extractor": "api-extractor run --local && cp dist/types.d.ts dist/cjs/index.d.ts && cp dist/types.d.ts dist/esm/index.d.ts",
-    "build": "npm run clean && npx --package=typescript tsc --project tsconfig.build.json && node esbuild.mjs && npm run api-extractor",
+    "build": "npm run clean && npx --package=typescript tsc --project tsconfig.build.json && node esbuild.mjs && if [ -z \"$CI\" ] && [ -z \"$VERCEL\" ]; then npm run api-extractor; else echo \"Skipping API Extractor on CI\"; fi",
     "clean": "npx rimraf dist",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
