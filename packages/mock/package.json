@@ -48,7 +48,7 @@
   ],
   "scripts": {
     "api-extractor": "api-extractor run --local && cp dist/types.d.ts dist/cjs/index.d.ts && cp dist/types.d.ts dist/esm/index.d.ts",
-    "build": "npm run clean && npx --package=typescript tsc && node esbuild.mjs && npm run api-extractor",
+    "build": "npm run clean && npx --package=typescript tsc --project tsconfig.build.json && node esbuild.mjs && npm run api-extractor",
     "clean": "npx rimraf dist",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -65,6 +65,8 @@
   },
   "devDependencies": {
     "@microsoft/api-extractor": "7.52.10",
+    "@types/jest": "29.5.14",
+    "@types/node": "20.19.9",
     "@types/pdfmake": "0.2.11",
     "esbuild": "0.25.8",
     "rimraf": "6.0.1"
