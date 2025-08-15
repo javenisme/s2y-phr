@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "types": ["node"],
-    "lib": ["esnext", "dom", "webworker"]
+    "lib": ["esnext", "dom"],
+    "skipLibCheck": true
   },
   "exclude": [
     "src/**/*.test.ts",
