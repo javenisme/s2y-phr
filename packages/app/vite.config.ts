@@ -41,4 +41,5 @@ export default defineConfig({
       '@medplum/react-hooks': path.resolve(__dirname, '../react-hooks/src'),
     },
   },
+  base: '/',
 });
