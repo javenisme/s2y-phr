@@ -11,6 +11,13 @@
           ".env"
         ]
       }
+    },
+    {
+      "src": "packages/app/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "packages/app/dist"
+      }
     }
   ],
   "routes": [
@@ -27,11 +34,7 @@
       "dest": "/packages/server/src/index.ts"
     },
     {
-      "src": "/oauth/(.*)",
-      "dest": "/packages/server/src/index.ts"
-    },
-    {
-      "src": "/admin/(.*)",
+      "src": "/oauth2/(.*)",
       "dest": "/packages/server/src/index.ts"
     },
     {
@@ -43,10 +46,21 @@
       "dest": "/packages/server/src/index.ts"
     },
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/packages/server/src/index.ts"
+      "dest": "/index.html"
     }
   ],
+  "build": {
+    "env": {
+      "MEDPLUM_BASE_URL": "@medplum_base_url",
+      "MEDPLUM_CLIENT_ID": "@medplum_client_id",
+      "GOOGLE_CLIENT_ID": "@google_client_id",
+      "RECAPTCHA_SITE_KEY": "@recaptcha_site_key"
+    }
+  },
   "env": {
     "NODE_ENV": "production",
     "MEDPLUM_DATABASE_HOST": "@medplum_database_host",
@@ -61,7 +75,11 @@
     "MEDPLUM_REDIS_PASSWORD": "@medplum_redis_password_prod",
     "MEDPLUM_SIGNING_KEY_ID": "@medplum_signing_key_id_prod",
     "MEDPLUM_SIGNING_KEY_PASSPHRASE": "@medplum_signing_key_passphrase_prod",
-    "MEDPLUM_ADMIN_CLIENT_ID": "@medplum_admin_client_id_prod"
+    "MEDPLUM_ADMIN_CLIENT_ID": "@medplum_admin_client_id_prod",
+    "MEDPLUM_BASE_URL": "@medplum_base_url",
+    "MEDPLUM_CLIENT_ID": "@medplum_client_id",
+    "GOOGLE_CLIENT_ID": "@google_client_id",
+    "RECAPTCHA_SITE_KEY": "@recaptcha_site_key"
   },
   "functions": {
     "packages/server/src/index.ts": {
