@@ -4,16 +4,17 @@
 
 import { writeFileSync } from 'fs';
 
-  loader: { '.ts': 'ts' },
 async function build() {
   // Use dynamic import to resolve esbuild in Vercel environments
   const esbuild = await import('esbuild');
 
-  const options = {
+  const baseOptions = {
     entryPoints: ['./src/index.ts'],
     bundle: true,
     platform: 'node',
-    loader: { '.ts': 'ts' },
+    loader: {
+      '.ts': 'ts'
+    },
     resolveExtensions: ['.ts'],
     target: 'es2021',
     tsconfig: 'tsconfig.json',
@@ -24,14 +25,14 @@ async function build() {
 
   try {
     await esbuild.build({
-      ...options,
+      ...baseOptions,
       format: 'cjs',
       outfile: './dist/cjs/index.cjs',
     });
     writeFileSync('./dist/cjs/package.json', '{"type": "commonjs"}');
 
     await esbuild.build({
-      ...options,
+      ...baseOptions,
       format: 'esm',
       outfile: './dist/esm/index.mjs',
     });
