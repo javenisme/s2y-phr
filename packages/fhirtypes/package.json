@@ -39,6 +39,9 @@
     "clean": "",
     "test": ""
   },
+  "devDependencies": {
+    "typescript": "5.9.2"
+  },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   }
