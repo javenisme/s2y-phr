@@ -2393,9 +2393,10 @@ export class MedplumClient extends TypedEventTarget<MedplumClientEventMap> {
         body = data as File;
       } else if (typeof Uint8Array !== 'undefined' && (data instanceof Uint8Array || data?.constructor?.name === 'Uint8Array')) {
         // Convert the typed array view to an ArrayBuffer slice to avoid sending the entire underlying buffer
-        const offset = data.byteOffset;
-        const length = data.byteLength;
-        body = data.buffer.slice(offset, offset + length);
+        const uint8Data = data as Uint8Array;
+        const offset = uint8Data.byteOffset;
+        const length = uint8Data.byteLength;
+        body = uint8Data.buffer.slice(offset, offset + length) as ArrayBuffer;
       } else {
         body = data as any;
       }
@@ -3686,9 +3687,9 @@ export class MedplumClient extends TypedEventTarget<MedplumClientEventMap> {
   private setRequestBody(options: MedplumRequestOptions, data: any): void {
     if (
       typeof data === 'string' ||
-      (typeof Blob !== 'undefined' && (data instanceof Blob || data?.constructor.name === 'Blob')) ||
-      (typeof File !== 'undefined' && (data instanceof File || data?.constructor.name === 'File')) ||
-      (typeof Uint8Array !== 'undefined' && (data instanceof Uint8Array || data?.constructor.name === 'Uint8Array'))
+      (typeof Blob !== 'undefined' && (data instanceof Blob || data?.constructor?.name === 'Blob')) ||
+      (typeof File !== 'undefined' && (data instanceof File || data?.constructor?.name === 'File')) ||
+      (typeof Uint8Array !== 'undefined' && (data instanceof Uint8Array || data?.constructor?.name === 'Uint8Array'))
     ) {
       options.body = data;
     } else if (data) {

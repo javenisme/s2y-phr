@@ -19,7 +19,7 @@
   "scripts": {
     "agent": "ts-node src/main.ts",
     "build": "npm run clean && tsc && node esbuild.mjs",
-    "clean": "rimraf dist",
+    "clean": "npx rimraf dist",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "jest"

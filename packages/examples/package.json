@@ -15,7 +15,7 @@
   "author": "Medplum <hello@medplum.com>",
   "scripts": {
     "build": "npm run clean && tsc",
-    "clean": "rimraf dist",
+    "clean": "npx rimraf dist",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

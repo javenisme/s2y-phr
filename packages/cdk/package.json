@@ -19,7 +19,7 @@
   "scripts": {
     "build": "npm run clean && tsc --project tsconfig.build.json && node esbuild.mjs",
     "cdk": "cdk",
-    "clean": "rimraf dist cdk.out",
+    "clean": "npx rimraf dist cdk.out",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "jest --runInBand"
