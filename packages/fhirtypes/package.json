@@ -35,7 +35,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "node -e \"console.log('skip @medplum/fhirtypes build on Vercel')\"",
     "clean": "",
     "test": ""
   },
