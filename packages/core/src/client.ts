@@ -2382,8 +2382,25 @@ export class MedplumClient extends TypedEventTarget<MedplumClientEventMap> {
           xhr.setRequestHeader(key, value);
         }
       }
+      
+      // Normalize body to a safe XMLHttpRequestBodyInit across environments
+      let body: Document | XMLHttpRequestBodyInit | null | undefined;
+      if (typeof data === 'string') {
+        body = data;
+      } else if (typeof Blob !== 'undefined' && (data instanceof Blob || data?.constructor?.name === 'Blob')) {
+        body = data as Blob;
+      } else if (typeof File !== 'undefined' && (data instanceof File || data?.constructor?.name === 'File')) {
+        body = data as File;
+      } else if (typeof Uint8Array !== 'undefined' && (data instanceof Uint8Array || data?.constructor?.name === 'Uint8Array')) {
+        // Convert the typed array view to an ArrayBuffer slice to avoid sending the entire underlying buffer
+        const offset = data.byteOffset;
+        const length = data.byteLength;
+        body = data.buffer.slice(offset, offset + length);
+      } else {
+        body = data as any;
+      }
 
-      xhr.send(data as XMLHttpRequestBodyInit);
+      xhr.send(body);
     });
   }
 

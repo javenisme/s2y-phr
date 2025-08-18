@@ -73,6 +73,7 @@
     "jsdom": "26.1.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",
+    "rimraf": "6.0.1",
     "vitest": "3.2.4"
   },
   "peerDependencies": {

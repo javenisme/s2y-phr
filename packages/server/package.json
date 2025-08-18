@@ -120,6 +120,7 @@
     "aws-sdk-client-mock-jest": "4.1.0",
     "mailparser": "3.7.4",
     "openapi3-ts": "4.5.0",
+    "rimraf": "6.0.1",
     "set-cookie-parser": "2.7.1",
     "supertest": "7.1.4",
     "superwstest": "2.1.1",

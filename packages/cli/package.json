@@ -82,7 +82,8 @@
     "@medplum/mock": "4.3.10",
     "@types/node-fetch": "2.6.13",
     "@types/semver": "7.7.0",
-    "aws-sdk-client-mock": "4.1.0"
+    "aws-sdk-client-mock": "4.1.0",
+    "rimraf": "6.0.1"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"

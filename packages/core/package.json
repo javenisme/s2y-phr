@@ -59,7 +59,8 @@
   "devDependencies": {
     "@medplum/definitions": "4.3.10",
     "@medplum/fhirtypes": "4.3.10",
-    "jest-websocket-mock": "2.5.0"
+    "jest-websocket-mock": "2.5.0",
+    "rimraf": "6.0.1"
   },
   "peerDependencies": {
     "pdfmake": "^0.2.5"

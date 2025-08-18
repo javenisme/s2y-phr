@@ -64,7 +64,8 @@
     "rfc6902": "5.1.2"
   },
   "devDependencies": {
-    "@types/pdfmake": "0.2.11"
+    "@types/pdfmake": "0.2.11",
+    "rimraf": "6.0.1"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"

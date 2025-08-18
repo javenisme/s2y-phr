@@ -44,7 +44,8 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@types/node": "20.19.11"
+    "@types/node": "20.19.11",
+    "rimraf": "6.0.1"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"

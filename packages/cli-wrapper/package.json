@@ -45,6 +45,9 @@
     "@medplum/cli": "4.3.10",
     "@medplum/core": "4.3.10"
   },
+  "devDependencies": {
+    "rimraf": "6.0.1"
+  },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   }
