@@ -14,7 +14,7 @@
   "license": "Apache-2.0",
   "author": "Medplum <hello@medplum.com>",
   "scripts": {
-    "build": "npm run clean && npx tsc && npx tsc --project tsconfig.build.json",
+    "build": "npm run clean && npx --package typescript tsc && npx --package typescript tsc --project tsconfig.build.json",
     "circular": "npx madge --circular dist/index.js",
     "clean": "npx rimraf dist",
     "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules --no-notify src/index.ts",
