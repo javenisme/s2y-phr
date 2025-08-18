@@ -36,7 +36,8 @@
   },
   "devDependencies": {
     "@types/object-hash": "3.0.6",
-    "rimraf": "6.0.1"
+    "rimraf": "6.0.1",
+    "typescript": "5.9.2"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"

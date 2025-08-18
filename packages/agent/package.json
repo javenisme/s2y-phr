@@ -39,7 +39,8 @@
     "@types/ws": "8.18.1",
     "mock-socket": "9.3.1",
     "postject": "1.0.0-alpha.6",
-    "rimraf": "6.0.1"
+    "rimraf": "6.0.1",
+    "typescript": "5.9.2"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
