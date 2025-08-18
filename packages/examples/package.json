@@ -14,10 +14,11 @@
   "license": "Apache-2.0",
   "author": "Medplum <hello@medplum.com>",
   "scripts": {
-    "build": "npm run clean && tsc",
+    "build": "npm run clean && npx tsc",
     "clean": "npx rimraf dist",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "test": "jest"
   },
   "devDependencies": {
     "@jest/globals": "29.7.0",

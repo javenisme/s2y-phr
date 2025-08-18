@@ -36,12 +36,13 @@
     "dist"
   ],
   "scripts": {
-    "build": "npm run clean && tsc && node esbuild.mjs",
+    "build": "npm run clean && npx tsc && node esbuild.mjs",
     "clean": "npx rimraf dist",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "medplum": "ts-node src/index.ts",
-    "test": "jest"
+    "test": "jest",
+    "dev": "node esbuild.mjs --watch"
   },
   "devDependencies": {
     "@types/node": "20.19.11",

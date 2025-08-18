@@ -35,11 +35,12 @@
     "dist"
   ],
   "scripts": {
-    "build": "npm run clean && tsc && node esbuild.mjs",
+    "build": "npm run clean && npx tsc && node esbuild.mjs",
     "clean": "npx rimraf dist",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "medplum": "ts-node src/index.ts"
+    "medplum": "ts-node src/index.ts",
+    "dev": "node esbuild.mjs --watch"
   },
   "dependencies": {
     "@medplum/cli": "4.3.10",
