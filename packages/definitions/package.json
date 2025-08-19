@@ -34,16 +34,16 @@
     "dist"
   ],
   "scripts": {
-    "build": "node -e \"console.log('skip @medplum/definitions build on Vercel')\"",
+    "build": "npm run clean && npx --package=typescript tsc --project tsconfig.build.json",
     "clean": "npx rimraf dist/index.js dist/index.d.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "jest"
   },
-  "devDependencies": {
-    "rimraf": "6.0.1",
-    "typescript": "5.9.2"
+  "dependencies": {
+    "rimraf": "6.0.1"
   },
+  "devDependencies": {},
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   }

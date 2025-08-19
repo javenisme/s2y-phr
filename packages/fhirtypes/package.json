@@ -35,12 +35,12 @@
     "dist"
   ],
   "scripts": {
-    "build": "node -e \"console.log('skip @medplum/fhirtypes build on Vercel')\"",
+    "build": "npx --package=typescript tsc",
     "clean": "",
     "test": ""
   },
   "devDependencies": {
-    "typescript": "5.9.2"
+    "typescript": "5.8.3"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"

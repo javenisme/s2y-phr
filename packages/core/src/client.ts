@@ -2401,7 +2401,7 @@ export class MedplumClient extends TypedEventTarget<MedplumClientEventMap> {
         body = data as any;
       }
 
-      xhr.send(body);
+      xhr.send(data as any);
     });
   }
 

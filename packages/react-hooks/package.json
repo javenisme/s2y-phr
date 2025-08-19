@@ -53,7 +53,7 @@
   "scripts": {
     "api-documenter": "api-documenter markdown --input-folder ./dist/api/ --output-folder ./dist/docs/",
     "api-extractor": "api-extractor run --local && cp dist/types.d.ts dist/cjs/index.d.ts && cp dist/types.d.ts dist/esm/index.d.ts",
-    "build": "npm run clean && npx --package typescript tsc && node esbuild.mjs && npm run api-extractor",
+    "build": "npm run clean && npx --package=typescript tsc && node esbuild.mjs && if [ -z \"$CI\" ] && [ -z \"$VERCEL\" ]; then npm run api-extractor; else echo \"Skipping API Extractor on CI\"; fi",
     "clean": "npx rimraf dist",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -72,13 +72,15 @@
     "@types/react": "19.1.10",
     "@types/react-dom": "19.1.7",
     "dotenv": "17.2.1",
+    "esbuild": "0.25.8",
     "jest": "29.7.0",
     "jest-each": "29.7.0",
     "jest-websocket-mock": "2.5.0",
+    "@microsoft/api-extractor": "7.52.10",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "rimraf": "6.0.1",
-    "typescript": "5.9.2"
+    "typescript": "5.8.3"
   },
   "peerDependencies": {
     "@medplum/core": "4.3.10",

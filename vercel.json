@@ -1,0 +1,89 @@
+{
+  "version": 2,
+  "name": "medplum-supabase",
+  "builds": [
+    {
+      "src": "packages/server/src/index.ts",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "packages/server/**",
+          ".env"
+        ]
+      }
+    },
+    {
+      "src": "packages/app/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "packages/app/dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/packages/server/src/index.ts"
+    },
+    {
+      "src": "/fhir/(.*)",
+      "dest": "/packages/server/src/index.ts"
+    },
+    {
+      "src": "/auth/(.*)",
+      "dest": "/packages/server/src/index.ts"
+    },
+    {
+      "src": "/oauth2/(.*)",
+      "dest": "/packages/server/src/index.ts"
+    },
+    {
+      "src": "/storage/(.*)",
+      "dest": "/packages/server/src/index.ts"
+    },
+    {
+      "src": "/healthcheck",
+      "dest": "/packages/server/src/index.ts"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "build": {
+    "env": {
+      "MEDPLUM_BASE_URL": "@medplum_base_url",
+      "MEDPLUM_CLIENT_ID": "@medplum_client_id",
+      "GOOGLE_CLIENT_ID": "@google_client_id",
+      "RECAPTCHA_SITE_KEY": "@recaptcha_site_key"
+    }
+  },
+  "env": {
+    "NODE_ENV": "production",
+    "MEDPLUM_DATABASE_HOST": "@medplum_database_host",
+    "MEDPLUM_DATABASE_PORT": "@medplum_database_port", 
+    "MEDPLUM_DATABASE_DBNAME": "@medplum_database_dbname",
+    "MEDPLUM_DATABASE_USERNAME": "@medplum_database_username",
+    "MEDPLUM_DATABASE_PASSWORD": "@medplum_database_password",
+    "MEDPLUM_DATABASE_SSL_REQUIRE": "@medplum_database_ssl_require",
+    "MEDPLUM_DATABASE_SSL_REJECT_UNAUTHORIZED": "@medplum_database_ssl_reject_unauthorized",
+    "MEDPLUM_REDIS_HOST": "@medplum_redis_host_prod",
+    "MEDPLUM_REDIS_PORT": "@medplum_redis_port_prod",
+    "MEDPLUM_REDIS_PASSWORD": "@medplum_redis_password_prod",
+    "MEDPLUM_SIGNING_KEY_ID": "@medplum_signing_key_id_prod",
+    "MEDPLUM_SIGNING_KEY_PASSPHRASE": "@medplum_signing_key_passphrase_prod",
+    "MEDPLUM_ADMIN_CLIENT_ID": "@medplum_admin_client_id_prod",
+    "MEDPLUM_BASE_URL": "@medplum_base_url",
+    "MEDPLUM_CLIENT_ID": "@medplum_client_id",
+    "GOOGLE_CLIENT_ID": "@google_client_id",
+    "RECAPTCHA_SITE_KEY": "@recaptcha_site_key"
+  },
+  "functions": {
+    "packages/server/src/index.ts": {
+      "maxDuration": 30
+    }
+  }
+}
