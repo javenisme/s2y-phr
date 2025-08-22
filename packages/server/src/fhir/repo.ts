@@ -81,9 +81,8 @@ import { Operation } from 'rfc6902';
 import { v4 } from 'uuid';
 import { getConfig } from '../config/loader';
 import { syntheticR4Project } from '../constants';
-import { tryGetRequestContext } from '../context';
+import { AuthenticatedRequestContext, tryGetRequestContext } from '../context';
 import { DatabaseMode, getDatabasePool } from '../database';
-import { FhirRateLimiter } from '../fhirquota';
 import { getLogger } from '../logger';
 import { incrementCounter, recordHistogramValue } from '../otel/otel';
 import { getRedis } from '../redis';
@@ -106,11 +105,13 @@ import {
 import { patchObject } from '../util/patch';
 import { addBackgroundJobs } from '../workers';
 import { addSubscriptionJobs } from '../workers/subscription';
+import { FhirRateLimiter } from './fhirquota';
 import { validateResourceWithJsonSchema } from './jsonschema';
 import { getStandardAndDerivedSearchParameters } from './lookups/util';
 import { getPatients } from './patient';
 import { preCommitValidation } from './precommit';
 import { replaceConditionalReferences, validateResourceReferences } from './references';
+import { ResourceCap } from './resource-cap';
 import { getFullUrl } from './response';
 import { rewriteAttachments, RewriteMode } from './rewrite';
 import { buildSearchExpression, searchByReferenceImpl, searchImpl, SearchOptions } from './search';
@@ -267,9 +268,10 @@ export class Repository extends FhirRepository<PoolClient> implements Disposable
    * 6. 06/12/25 - Added columns per token search parameter (https://github.com/medplum/medplum/pull/6727)
    * 7. 06/25/25 - Added search params `ProjectMembership-identifier`, `Immunization-encounter`, `AllergyIntolerance-encounter` (https://github.com/medplum/medplum/pull/6868)
    * 8. 08/06/25 - Added Task to Patient compartment (https://github.com/medplum/medplum/pull/7194)
+   * 9. 08/19/25 - Added search parameter `ServiceRequest-reason-code` (https://github.com/medplum/medplum/pull/7271)
    *
    */
-  static readonly VERSION: number = 8;
+  static readonly VERSION: number = 9;
 
   constructor(context: RepositoryContext, conn?: PoolClient) {
     super();
@@ -298,11 +300,13 @@ export class Repository extends FhirRepository<PoolClient> implements Disposable
     this.mode = mode;
   }
 
-  rateLimiter(): FhirRateLimiter | undefined {
-    if (this.isSuperAdmin()) {
-      return undefined;
-    }
-    return tryGetRequestContext()?.fhirRateLimiter;
+  private rateLimiter(): FhirRateLimiter | undefined {
+    return !this.isSuperAdmin() ? tryGetRequestContext()?.fhirRateLimiter : undefined;
+  }
+
+  private resourceCap(): ResourceCap | undefined {
+    const context = tryGetRequestContext();
+    return !this.isSuperAdmin() && context instanceof AuthenticatedRequestContext ? context.resourceCap : undefined;
   }
 
   currentProject(): WithId<Project> | undefined {
@@ -328,6 +332,7 @@ export class Repository extends FhirRepository<PoolClient> implements Disposable
 
   async createResource<T extends Resource>(resource: T, options?: CreateResourceOptions): Promise<WithId<T>> {
     await this.rateLimiter()?.recordWrite();
+    await this.resourceCap()?.created();
 
     const resourceWithId = {
       ...resource,
@@ -741,7 +746,7 @@ export class Repository extends FhirRepository<PoolClient> implements Disposable
     if (projectId) {
       resultMeta.project = projectId;
     }
-    const accounts = await this.getAccounts(existing, updated, options?.inheritAccounts);
+    const accounts = await this.getAccounts(existing, updated);
     if (accounts) {
       resultMeta.account = accounts[0];
       resultMeta.accounts = accounts;
@@ -1251,7 +1256,7 @@ export class Repository extends FhirRepository<PoolClient> implements Disposable
    * @param ids - The resource IDs.
    */
   async expungeResources(resourceType: string, ids: string[]): Promise<void> {
-    if (!this.isSuperAdmin()) {
+    if (!this.isSuperAdmin() && !this.isProjectAdmin()) {
       throw new OperationOutcomeError(forbidden);
     }
     if (ids.length === 0) {
@@ -1272,6 +1277,7 @@ export class Repository extends FhirRepository<PoolClient> implements Disposable
       { attributes: { resourceType, result: 'success' } },
       ids.length
     );
+    await this.resourceCap()?.deleted(ids.length);
   }
 
   /**
@@ -1874,16 +1880,14 @@ export class Repository extends FhirRepository<PoolClient> implements Disposable
    * Otherwise uses the current context profile.
    * @param existing - Current (soon to be previous) resource, if one exists.
    * @param updated - The incoming updated resource.
-   * @param inheritAccounts - If true, inherit accounts from the parent resource.
    * @returns The account values.
    */
   private async getAccounts(
     existing: WithId<Resource> | undefined,
-    updated: WithId<Resource>,
-    inheritAccounts?: boolean
+    updated: WithId<Resource>
   ): Promise<Reference[] | undefined> {
-    if (updated.meta && this.canWriteAccount() && !inheritAccounts) {
-      // If the user specifies accounts, and they have permission, and inheritAccounts is false, then use the provided accounts.
+    if (updated.meta && this.canWriteAccount()) {
+      // If the user specifies accounts, and they have permission, then use the provided accounts.
       const updatedAccounts = this.extractAccountReferences(updated.meta);
       return updatedAccounts;
     }
@@ -1998,10 +2002,7 @@ export class Repository extends FhirRepository<PoolClient> implements Disposable
    * @param resource - The resource.
    * @returns The access policy permitting the interaction, or undefined if not permitted.
    */
-  private canPerformInteraction(
-    interaction: AccessPolicyInteraction,
-    resource: Resource
-  ): AccessPolicyResource | undefined {
+  canPerformInteraction(interaction: AccessPolicyInteraction, resource: Resource): AccessPolicyResource | undefined {
     if (!this.isSuperAdmin()) {
       // Only Super Admins can access server-critical resource types
       if (protectedResourceTypes.includes(resource.resourceType)) {
@@ -2346,6 +2347,7 @@ export class Repository extends FhirRepository<PoolClient> implements Disposable
           attempt,
           attemptDurationMs,
           transactionAttempts,
+          serializable: options?.serializable ?? false,
           delayMs,
           baseDelayMs,
         });
@@ -2355,6 +2357,7 @@ export class Repository extends FhirRepository<PoolClient> implements Disposable
           attempt,
           attemptDurationMs,
           transactionAttempts,
+          serializable: options?.serializable ?? false,
         });
       }
     }

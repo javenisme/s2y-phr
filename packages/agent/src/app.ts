@@ -23,7 +23,7 @@ import {
 } from '@medplum/core';
 import { Agent, AgentChannel, Endpoint, Reference } from '@medplum/fhirtypes';
 import { Hl7Client } from '@medplum/hl7';
-import { ChildProcess, ExecException, ExecOptions, exec, spawn } from 'node:child_process';
+import { ChildProcess, ExecException, ExecOptionsWithStringEncoding, exec, spawn } from 'node:child_process';
 import { existsSync, openSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { isIPv4, isIPv6 } from 'node:net';
 import { platform } from 'node:os';
@@ -38,7 +38,10 @@ import { createPidFile, forceKillApp, isAppRunning, removePidFile, waitForPidFil
 import { getCurrentStats } from './stats';
 import { UPGRADER_LOG_PATH, UPGRADE_MANIFEST_PATH } from './upgrader-utils';
 
-async function execAsync(command: string, options: ExecOptions): Promise<{ stdout: string; stderr: string }> {
+async function execAsync(
+  command: string,
+  options: ExecOptionsWithStringEncoding
+): Promise<{ stdout: string; stderr: string }> {
   return new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
     exec(command, options, (ex: ExecException | null, stdout: string, stderr: string) => {
       if (ex) {
@@ -872,7 +875,10 @@ export class App {
           this.log.info(`Persistent connection to remote '${message.remote}' closed`);
         });
         client.addEventListener('error', (event) => {
-          this.hl7Clients.delete(message.remote);
+          // If the current client for this remote is this client, make sure to clean it up
+          if (this.hl7Clients.get(message.remote) === client) {
+            this.hl7Clients.delete(message.remote);
+          }
           this.log.error(
             `Persistent connection to remote '${message.remote}' encountered error: '${normalizeErrorString(event.error)}' - Closing connection...`
           );
